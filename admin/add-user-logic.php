@@ -21,8 +21,6 @@ if(isset($_POST['submit'])) {
         $_SESSION['add-user'] = "Please enter your Username"; 
     } else if (!$email) {
         $_SESSION['add-user'] = "Please enter a valid email"; 
-    } else if (!$is_admin) {
-            $_SESSION['add-user'] = "Please select user role"; 
     } else if (strlen($createpassword) < 8 || strlen($confirmpassword) < 8) {
         $_SESSION['add-user'] = "Password should be 8+ characters"; 
     } else if (!$avatar['name']) {
@@ -84,7 +82,7 @@ if(isset($_POST['submit'])) {
 
         if(!mysqli_errno($connection)) {
             // redirect to login page with success message
-            $_SESSION['add-user-success'] = "Registration successful. Please log in";
+            $_SESSION['add-user-success'] = "New user $firstname $lastname added successfully.";
             header('location: ' . ROOT_URL . 'admin/manage-users.php');
             die();
         }
