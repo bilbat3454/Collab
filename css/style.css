@@ -7,7 +7,7 @@
     --color-green: #00c476;
     --color-green-light: hsl(156, 100%, 38%, 15%);
     --color-gray-900: #301e66;
-    --color-gray-700: #2d2b7c;
+    --color-gray-700: #462b7c;
     --color-gray-300: rgba(242, 242, 254, 0.3);
     --color-gray-200: rgba(242, 242, 254, 0.7);
     --color-white: #f2f2fe;
@@ -280,7 +280,7 @@ CATEGORY BUTTONS
 .category__buttons-container {
     width: fit-content;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
 }
 
@@ -464,7 +464,7 @@ EMPTY PAGES
 */
 .empty__page {
     height: 70vh;
-    text-align: center;
+    text-align: left;
     display: grid;
     place-content: center;
 

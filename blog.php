@@ -1,109 +1,97 @@
 <?php
 include 'partials/header.php';
 
+
+// fetch all posts from posts table
+$query = "SELECT * FROM posts ORDER BY date_time DESC";
+$posts = mysqli_query($connection, $query);
 ?>
 
 
-    <section class="search__bar">
-        <form class="container search__bar-container" action="">
-            <div>
-                <i class="uil uil-search"></i>
-                <input type="search" name="" placeholder="Search">
-            </div>
-            <button type="submit" class="btn">Go</button>
-        </form>
-    </section>
-    <!--================================ END OF SEARCH =====================================-->
 
-
-    <section class="posts">
-        <div class="container posts__container">
-            <article class="post">
-                <div class="post__thumbnail">
-                    <img src="./images/blog2.png">
-                </div>
-                <div class="post__info">
-                    <a href="" class="category__button">Reviews</a>
-                    <h3 class="post__title">
-                        <a href="post.html">Spiral Hearts</a>
-                    </h3>
-                    <p class="post__body">
-                        This is the long awaited review for "Sprial Hearts" by The Swells. This album 
-                        is a whirlwind of sounds that with a cinematic concept of love and loss.
-                    </p>
-                    <div class="post__author">
-                        <div class="post__author-avatar">
-                            <img src="./images/avatar3.jpg">
-                        </div>
-                        <div class="post__author-info">
-                            <h5>By: John Smith</h5>
-                            <small>February 05, 2024 - 10:34</small>
-                        </div>
-                    </div>
-                </div>
-            </article>
-            <article class="post">
-                <div class="post__thumbnail">
-                    <img src="./images/blog3.jpg">
-                </div>
-                <div class="post__info">
-                    <a href="" class="category__button">Inspiration</a>
-                    <h3 class="post__title">
-                        <a href="post.html">Writers Block Prison</a>
-                    </h3>
-                    <p class="post__body">
-                        I know first hand of the prison known as "Writer's Block." Its an dark and cold place 
-                        where ideas are emtpy and inspiration is lost but fear not because there's always hope.
-                    </p>
-                    <div class="post__author">
-                        <div class="post__author-avatar">
-                            <img src="./images/avatar4.jpg">
-                        </div>
-                        <div class="post__author-info">
-                            <h5>By: Felix King</h5>
-                            <small>October, 17 2023 - 6:10</small>
-                        </div>
-                    </div>
-                </div>
-            </article>
-            <article class="post">
-                <div class="post__thumbnail">
-                    <img src="./images/blog4.jpg">
-                </div>
-                <div class="post__info">
-                    <a href="" class="category__button">Song Help</a>
-                    <h3 class="post__title">
-                        <a href="post.html">Record Song</a>
-                    </h3>
-                    <p class="post__body">
-                        Hey Guys! I need help orchestrating the rest of this song. I have the majority of the 
-                        track done but it needs some extra tlc to take it over the top but I don't know whats missing.
-                    </p>
-                    <div class="post__author">
-                        <div class="post__author-avatar">
-                            <img src="./images/avatar5.jpg">
-                        </div>
-                        <div class="post__author-info">
-                            <h5>By: Richard James</h5>
-                            <small>December 10, 2023 - 7:30</small>
-                        </div>
-                    </div>
-                </div>
-            </article>
+<section class="search__bar">
+    <form class="container search__bar-container" action="<?= ROOT_URL ?>search.php" method="GET">
+        <div>
+            <i class="uil uil-search"></i>
+            <input type="search" name="search" placeholder="Search">
         </div>
-    </section>
-    <!--====================================END OF POSTS=============================================-->
+        <button type="submit" name="submit" class="btn">Go</button>
+    </form>
+</section>
+<!--====================== END OF SEARCH ====================-->
 
 
-    <section class="category__buttons">
-        <div class="container category__buttons-container">
-            <a href="" class="category__button">Song Help</a>
-            <a href="" class="category__button">Inspiration</a>
-            <a href="" class="category__button">Reviews</a>
-            <a href="" class="category__button">Discussions</a>
-        </div>
-    </section>
-    <!--====================================END OF CATEGORY BUTTONS=============================================-->
+
+
+
+
+
+<section class="posts <?= $featured ? '' : 'section__extra-margin' ?>">
+    <div class="container posts__container">
+        <?php while ($post = mysqli_fetch_assoc($posts)) : ?>
+            <article class="post">
+                <div class="post__thumbnail">
+                    <img src="./images/<?= $post['thumbnail'] ?>">
+                </div>
+                <div class="post__info">
+                    <?php
+                    // fetch category from categories table using category_id of post
+                    $category_id = $post['category_id'];
+                    $category_query = "SELECT * FROM categories WHERE id=$category_id";
+                    $category_result = mysqli_query($connection, $category_query);
+                    $category = mysqli_fetch_assoc($category_result);
+                    ?>
+                    <a href="<?= ROOT_URL ?>category-posts.php?id=<?= $post['category_id'] ?>" class="category__button"><?= $category['title'] ?></a>
+                    <h3 class="post__title">
+                        <a href="<?= ROOT_URL ?>post.php?id=<?= $post['id'] ?>"><?= $post['title'] ?></a>
+                    </h3>
+                    <p class="post__body">
+                        <?= substr($post['body'], 0, 150) ?>...
+                    </p>
+                    <div class="post__author">
+                        <?php
+                        // fetch author from users table using author_id
+                        $author_id = $post['author_id'];
+                        $author_query = "SELECT * FROM users WHERE id=$author_id";
+                        $author_result = mysqli_query($connection, $author_query);
+                        $author = mysqli_fetch_assoc($author_result);
+
+                        ?>
+                        <div class="post__author-avatar">
+                            <img src="./images/<?= $author['avatar'] ?>">
+                        </div>
+                        <div class="post__author-info">
+                            <h5>By: <?= "{$author['firstname']} {$author['lastname']}" ?></h5>
+                            <small>
+                                <?= date("M d, Y - H:i", strtotime($post['date_time'])) ?>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        <?php endwhile ?>
+    </div>
+</section>
+<!--====================== END OF POSTS ====================-->
+
+
+
+
+<section class="category__buttons">
+    <div class="container category__buttons-container">
+        <?php
+        $all_categories_query = "SELECT * FROM categories";
+        $all_categories = mysqli_query($connection, $all_categories_query);
+        ?>
+        <?php while ($category = mysqli_fetch_assoc($all_categories)) : ?>
+            <a href="<?= ROOT_URL ?>category-posts.php?id=<?= $category['id'] ?>" class="category__button"><?= $category['title'] ?></a>
+        <?php endwhile ?>
+    </div>
+</section>
+<!--====================== END OF CATEGORY BUTTONS ====================-->
+
+
+
 
 <?php
 include 'partials/footer.php';
