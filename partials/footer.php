@@ -14,6 +14,7 @@
                    <li><a href="">Inspiration</a></li>
                    <li><a href="">Reviews</a></li> 
                    <li><a href="">Discussions</a></li>
+                   <li><a href="">Uncategorized</a></li>
                 </ul>
             </article>
             <article>
